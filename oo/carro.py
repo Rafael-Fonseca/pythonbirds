@@ -143,3 +143,15 @@ if __name__ == "__main__":
     carro.calcular_direcao()
     carro.girar_a_esquerda()
     carro.calcular_direcao()
+
+    '''
+    print('vamo junto')
+    carro = Carro(motor, direcao)
+    carro.motores = [Motor(), Motor(), Motor()]
+    print(id(carro.motores[0])==id(carro.motores[1]))
+    print(id(list(filter(lambda motor: motor.velocidade==0 , carro.motores))[0]) == id(carro.motores[0]))
+    novo_carro_motores = list(filter(lambda motor: motor.velocidade==0 , carro.motores))
+    print(novo_carro_motores == carro.motores)
+    novo_carro_motores[0].velocidade=50
+    print(carro.motores[0].velocidade)
+    '''

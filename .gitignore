@@ -53,3 +53,5 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+testes/_trial_temp-1/_trial_marker
+testes/_trial_temp.lock/symlink

@@ -30,7 +30,7 @@ class AtorTestes(TestCase):
         self.assertEqual(ATIVO, ator.status)
         self.assertEqual('A', ator.caracter())
 
-    def teste_ator_posicao(self):
+    def teste_ator_posicao(self): # FALHANDO!!!
         'Teste que verifica que o ator comum não deve se mover independente do tempo do jogo'
         ator = Ator()
         x, y = ator.calcular_posicao(0)
@@ -101,12 +101,12 @@ class AtorTestes(TestCase):
         self.assert_nao_colisao(Ator(1, 2), ator)
         self.assert_nao_colisao(Ator(1, 3), ator)
 
-    def test_caracter(self):
+    def test_caracter(self): # FALHANDO
         'Teste de caracter para status ATIVO e DESTRUIDO'
         ator = Ator()
         self.assertEqual('A', ator.caracter())
         outro_ator_na_mesma_posicao = Ator()
-        ator.colidir(outro_ator_na_mesma_posicao)
+        ator.colidir(outro_ator_na_mesma_posicao) #Não implementada, ao colidir tem que destruir o ator
         self.assertEqual(' ', ator.caracter())
 
 

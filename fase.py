@@ -35,31 +35,31 @@ class Fase():
         self._passaros = []
         self._porcos = []
         self._obstaculos = []
-
+        # self._passaros_lancados = []
 
     def adicionar_obstaculo(self, *obstaculos):
         """
         Adiciona obstáculos em uma fase
 
-        :param obstaculos:
+        :param obstaculos: Tupla de objetos obstáculos
         """
-        pass
+        self._obstaculos.extend(obstaculos)
 
     def adicionar_porco(self, *porcos):
         """
         Adiciona porcos em uma fase
 
-        :param porcos:
+        :param porcos: Tupla de objetos porcos
         """
-        pass
+        self._porcos.extend(porcos)
 
     def adicionar_passaro(self, *passaros):
         """
         Adiciona pássaros em uma fase
 
-        :param passaros:
+        :param passaros: Tupla de objetos passaros
         """
-        pass
+        self._passaros.extend(passaros)
 
     def status(self):
         """
@@ -71,9 +71,24 @@ class Fase():
 
         Se o jogo acabou com vitória (não existe porco ativo), retorna essa mensagem
 
-        :return:
+        :return: Constante que indica o status do jogo
         """
-        return EM_ANDAMENTO
+        if all(map(lambda ator: ator.status == 'Destruido', self._porcos)):  # Se estão mortos todos os porcos
+            return VITORIA
+        elif all(map(lambda ator: ator.status == 'Destruido', self._passaros)):  # Se estão mortos todos os pássaros
+            return DERROTA
+        else:  # Se ainda existem porcos e pássaros
+            return EM_ANDAMENTO
+
+    def passaros_a_lancar(self):
+        """
+        :return: Lista de passaros que não foram lançados.
+        """
+        '''
+        A linha abaixo itera em self._passaros coletando os valores onde ator.foi_lancado é falso.
+        Transforma os valores coletados em uma lista.
+        '''
+        return list(filter(lambda ator: ator.foi_lancado() is False, self._passaros))
 
     def lancar(self, angulo, tempo):
         """
@@ -86,7 +101,11 @@ class Fase():
         :param angulo: ângulo de lançamento
         :param tempo: Tempo de lançamento
         """
-        pass
+
+        passaros_disponiveis = self.passaros_a_lancar()
+        if passaros_disponiveis:
+            passaros_disponiveis[0].lancar(angulo, tempo)
+
 
 
     def calcular_pontos(self, tempo):

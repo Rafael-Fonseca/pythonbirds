@@ -25,6 +25,8 @@ class Ator:
         """
         self.y = y
         self.x = x
+        self._y_atual = y
+        self._x_atual = x
         self.status = ATIVO
 
     def caracter(self):

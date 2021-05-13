@@ -2,14 +2,14 @@
 
 from __future__ import unicode_literals
 
-import math
+from math import *
 
 DESTRUIDO = 'Destruido'
 ATIVO = 'Ativo'
 GRAVIDADE = 10  # m/s^2
 
 
-class Ator():
+class Ator:
     """
     Classe que representa um ator. Ele representa um ponto cartesiano na tela.
     """
@@ -38,7 +38,7 @@ class Ator():
         :param tempo: o tempo do jogo
         :return: posição x, y do ator
         """
-        return 1, 1
+        return self.x, self.y
 
     def colidir(self, outro_ator, intervalo=1):
         """
@@ -52,8 +52,11 @@ class Ator():
         :param intervalo: Intervalo a ser considerado
         :return:
         """
-        pass
-
+        if self.status == ATIVO and outro_ator.status == ATIVO:
+            delta_x = abs(self.x - outro_ator.x)
+            delta_y = abs(self.y - outro_ator.y)
+            if delta_x <= intervalo and delta_y <= intervalo:
+                self.status = outro_ator.status = DESTRUIDO
 
 
 class Obstaculo(Ator):
@@ -62,6 +65,7 @@ class Obstaculo(Ator):
 
 class Porco(Ator):
     _caracter_ativo = '@'
+    _caracter_destruido = '+'
 
 
 class DuploLancamentoExcecao(Exception):
@@ -83,7 +87,9 @@ class Passaro(Ator):
         """
         super().__init__(x, y)
         self._x_inicial = x
+        self._x_atual = x
         self._y_inicial = y
+        self._y_atual = y
         self._tempo_de_lancamento = None
         self._angulo_de_lancamento = None  # radianos
         self._lancado = False
@@ -102,7 +108,9 @@ class Passaro(Ator):
         o status dos Passaro deve ser alterado para destruido, bem como o seu caracter
 
         """
-        pass
+        if self._y_atual <= 0:
+            self.status = DESTRUIDO
+        return
 
     def calcular_posicao(self, tempo):
         """
@@ -118,7 +126,17 @@ class Passaro(Ator):
         :param tempo: tempo de jogo a ser calculada a posição
         :return: posição x, y
         """
-        return 1, 1
+        if self.status == DESTRUIDO:
+            return self._x_atual, self._y_atual
+
+        if self.foi_lancado():
+            delta_tempo = tempo - self._tempo_de_lancamento
+            self._x_atual = self.x + self.velocidade_escalar * cos(self._angulo_de_lancamento) * delta_tempo
+            self._y_atual = (self.y + self.velocidade_escalar * sin(self._angulo_de_lancamento) * delta_tempo
+                             - ((GRAVIDADE * delta_tempo ** 2) / 2))
+            return self._x_atual, self._y_atual
+
+        return self.x, self.y
 
 
     def lancar(self, angulo, tempo_de_lancamento):
@@ -131,11 +149,18 @@ class Passaro(Ator):
         :return:
         """
         self._lancado = True
+        self._angulo_de_lancamento = radians(angulo)
+        self._tempo_de_lancamento = tempo_de_lancamento
+
 
 
 class PassaroAmarelo(Passaro):
-    pass
+    _caracter_ativo = 'A'
+    _caracter_destruido = 'a'
+    velocidade_escalar = 30
 
 
 class PassaroVermelho(Passaro):
     _caracter_ativo = 'V'
+    _caracter_destruido = 'v'
+    velocidade_escalar = 20

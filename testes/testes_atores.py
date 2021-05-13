@@ -101,7 +101,7 @@ class AtorTestes(TestCase):
         self.assert_nao_colisao(Ator(1, 2), ator)
         self.assert_nao_colisao(Ator(1, 3), ator)
 
-    def test_caracter(self): # FALHANDO
+    def test_caracter(self):
         'Teste de caracter para status ATIVO e DESTRUIDO'
         ator = Ator()
         self.assertEqual('A', ator.caracter())
@@ -143,10 +143,10 @@ class AtorTestes(TestCase):
 
 
 class ObstaculoTestes(TestCase):
-    """
-    Esperado '0' como caracter de obstáculo ativo e ' ' como caracter de obstáculo destruído
-    """
     def teste_status(self):
+        """
+        Esperado '0' como caracter de obstáculo ativo e ' ' como caracter de obstáculo destruído
+        """
         obstaculo = Obstaculo()
         self.assertEqual('O', obstaculo.caracter())
         outro_ator_na_mesma_posicao = Ator()
@@ -155,10 +155,10 @@ class ObstaculoTestes(TestCase):
 
 
 class PorcoTestes(TestCase):
-    """
-    Esperado '@' como caracter de porco ativo e '+' como caracter de porco destruido
-    """
     def teste_status(self):
+        """
+        Esperado '@' como caracter de porco ativo e '+' como caracter de porco destruido
+        """
         porco = Porco()
         self.assertEqual('@', porco.caracter())
         outro_ator_na_mesma_posicao = Ator()
@@ -169,7 +169,7 @@ class PorcoTestes(TestCase):
 class PassaroBaseTests(TestCase):
     """
     Classe base para teste de passaros.
-    Essa classe não contèm nenhum teste, serve apenas para encapsular a lógica de asserção de posição de passaros
+    Essa classe não contèm nenhum teste, serve apenas para encapsular a lógica de asserção de posição de pássaros
     vermelhos e também dos amarelos.
 
     """
@@ -201,7 +201,6 @@ class PassaroVermelhoTests(PassaroBaseTests):
         outro_ator_na_mesma_posicao = Ator()
         passaro_vermelho.colidir(outro_ator_na_mesma_posicao)
         self.assertEqual('v', passaro_vermelho.caracter())
-
 
     def teste_velocidade_escalar(self):
         self.assertEqual(20, PassaroVermelho.velocidade_escalar)
@@ -259,7 +258,7 @@ class PassaroAmareloTests(PassaroBaseTests):
 
     def teste_lacamento_vertical(self):
         """
-        Tests de lançamento vertical. Nele, o passaro só se move verticalmente e sua posição y se matém contanstante
+        Tests de lançamento vertical. Nele, o pássaro só se move verticalmente e sua posição x se mantém constante
         :return:
         """
         passaro_amarelo = PassaroAmarelo(1, 1)

@@ -49,8 +49,8 @@ class PorcoFake(AtorFake):
 
 
 class PassaroFake(AtorFake):
-    def __init__(self, x=0, y=0, intervalo_colisao=1):
-        super().__init__(x, y, intervalo_colisao)
+    def __init__(self, x=0, y=0):
+        super().__init__(x, y)
         self._lancado = False
         self.colidir_com_chao_executado = False
 
@@ -190,11 +190,10 @@ class FaseTestes(TestCase):
         porco = PorcoFake(2, 2)
         fase.adicionar_porco(porco)
         fase.calcular_pontos(0)
-        # Alterei os próximos 4 testes para assertFalse, porque não faz sentido ser assertTrue
-        self.assertFalse(passaro.colidir_executado)
-        self.assertFalse(porco.colidir_executado)
-        self.assertFalse(passaro.calcular_posicao_executado)
-        self.assertFalse(passaro.colidir_com_chao_executado)
+        self.assertTrue(passaro.colidir_executado)
+        self.assertTrue(porco.colidir_executado)
+        self.assertTrue(passaro.calcular_posicao_executado)
+        self.assertTrue(passaro.colidir_com_chao_executado)
         self.assertEqual(1, passaro.intervalo_colisao)
         self.assertEqual(1, porco.intervalo_colisao)
 
@@ -204,9 +203,9 @@ class FaseTestes(TestCase):
         atores. valor testado: 31
         '''
         fase = Fase(30)
-        passaro = PassaroFake(1, 1, fase.intervalo_de_colisao)
+        passaro = PassaroFake(1, 1)
         fase.adicionar_passaro(passaro)
-        porco = PorcoFake(31, 31, fase.intervalo_de_colisao)
+        porco = PorcoFake(31, 31)
         fase.adicionar_porco(porco)
         fase.calcular_pontos(0)
         self.assertEqual(30, passaro.intervalo_colisao)

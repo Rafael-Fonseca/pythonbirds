@@ -61,6 +61,20 @@ class Fase():
         """
         self._passaros.extend(passaros)
 
+    def _todos_porcos_destruidos(self):
+        """
+        Informa se todos os porcos foram destruídos.
+        :return: Bool
+        """
+        return all(map(lambda ator: ator.status == 'Destruido', self._porcos))
+
+    def _todos_passaros_destruidos(self):
+        """
+        Informa se todos os pássaros foram destruídos.
+        :return: Bool
+        """
+        return all(map(lambda ator: ator.status == 'Destruido', self._passaros))
+
     def status(self):
         """
         Método que indica com mensagem o status do jogo
@@ -73,14 +87,14 @@ class Fase():
 
         :return: Constante que indica o status do jogo
         """
-        if all(map(lambda ator: ator.status == 'Destruido', self._porcos)):  # Se estão mortos todos os porcos
+        if self._todos_porcos_destruidos():
             return VITORIA
-        elif all(map(lambda ator: ator.status == 'Destruido', self._passaros)):  # Se estão mortos todos os pássaros
+        if self._todos_passaros_destruidos():
             return DERROTA
-        else:  # Se ainda existem porcos e pássaros
-            return EM_ANDAMENTO
 
-    def passaros_a_lancar(self):
+        return EM_ANDAMENTO
+
+    def _passaros_a_lancar(self):
         """
         :return: Lista de passaros que não foram lançados.
         """
@@ -102,7 +116,7 @@ class Fase():
         :param tempo: Tempo de lançamento
         """
 
-        passaros_disponiveis = self.passaros_a_lancar()
+        passaros_disponiveis = self._passaros_a_lancar()
         if passaros_disponiveis:
             passaros_disponiveis[0].lancar(angulo, tempo)
 
@@ -117,6 +131,11 @@ class Fase():
         :param tempo: tempo para o qual devem ser calculados os pontos
         :return: objeto do tipo Ponto
         """
+        for passaro in self._passaros:
+            passaro.calcular_posicao(tempo)
+            for alvo in self._obstaculos + self._porcos:
+                passaro.colidir(alvo, self.intervalo_de_colisao)
+                passaro.colidir_com_chao()
         pontos=[self._transformar_em_ponto(a) for a in self._passaros+self._obstaculos+self._porcos]
 
         return pontos

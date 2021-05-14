@@ -25,8 +25,6 @@ class Ator:
         """
         self.y = y
         self.x = x
-        self._y_atual = y
-        self._x_atual = x
         self.status = ATIVO
 
     def caracter(self):
@@ -89,12 +87,9 @@ class Passaro(Ator):
         """
         super().__init__(x, y)
         self._x_inicial = x
-        self._x_atual = x
         self._y_inicial = y
-        self._y_atual = y
         self._tempo_de_lancamento = None
         self._angulo_de_lancamento = None  # radianos
-        self._lancado = False
 
     def foi_lancado(self):
         """
@@ -102,7 +97,7 @@ class Passaro(Ator):
 
         :return: booleano
         """
-        return self._lancado
+        return self._tempo_de_lancamento is not None
 
     def colidir_com_chao(self):
         """
@@ -110,7 +105,7 @@ class Passaro(Ator):
         o status dos Passaro deve ser alterado para destruido, bem como o seu caracter
 
         """
-        if self._y_atual <= 0:
+        if self.y <= 0:
             self.status = DESTRUIDO
         return
 
@@ -128,18 +123,25 @@ class Passaro(Ator):
         :param tempo: tempo de jogo a ser calculada a posição
         :return: posição x, y
         """
-        if self.status == DESTRUIDO:
-            return self._x_atual, self._y_atual
-
-        if self.foi_lancado():
+        if self._esta_voando():
             delta_tempo = tempo - self._tempo_de_lancamento
-            self._x_atual = self.x + self.velocidade_escalar * cos(self._angulo_de_lancamento) * delta_tempo
-            self._y_atual = (self.y + self.velocidade_escalar * sin(self._angulo_de_lancamento) * delta_tempo
-                             - ((GRAVIDADE * delta_tempo ** 2) / 2))
-            return self._x_atual, self._y_atual
-
+            self.calcular_posicao_horizontal(delta_tempo)
+            self.calcular_posicao_vertical(delta_tempo)
         return self.x, self.y
 
+    def _esta_voando(self):
+        return self.foi_lancado() and self.status == ATIVO
+
+    def calcular_posicao_horizontal(self, delta_tempo):
+        _ = self._x_inicial
+        _ += self.velocidade_escalar * delta_tempo * cos(self._angulo_de_lancamento)
+        self.x = _
+
+    def calcular_posicao_vertical(self, delta_tempo):
+        _ = self._y_inicial
+        _ += self.velocidade_escalar * delta_tempo * sin(self._angulo_de_lancamento)
+        _ -= (GRAVIDADE * delta_tempo**2)/2
+        self.y = _
 
     def lancar(self, angulo, tempo_de_lancamento):
         """
@@ -150,10 +152,8 @@ class Passaro(Ator):
         :param tempo_de_lancamento:
         :return:
         """
-        self._lancado = True
         self._angulo_de_lancamento = radians(angulo)
         self._tempo_de_lancamento = tempo_de_lancamento
-
 
 
 class PassaroAmarelo(Passaro):
